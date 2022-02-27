@@ -10,7 +10,7 @@ const app = express();
 app.use(express.json());
 const io = new Server(httpServer, {
     cors: {
-        origin: "http://127.0.0.1:3005",
+        origin: `http://${process.env.IP}:3000`,
         methods: ["GET", "POST"]
     }
 });
@@ -28,7 +28,14 @@ app.get('/', (req, res) => {
 })
 
 app.get('/admin', (req, res) => {
-    io.to(room).emit('start', {'url': 'https://google.com'});
+    io.to(room).emit('start', {'url': 'https://google1.com'});
+    const clients = io.sockets.adapter.rooms.get(room);
+    console.log(Array.from(clients).length)
+    res.send('ok ' + Array.from(clients).length)
+})
+app.get('/a/:uri', (req, res) => {
+    let uri = req.params.uri;
+    io.to(room).emit('start', {'url': uri});
     const clients = io.sockets.adapter.rooms.get(room);
     console.log(Array.from(clients).length)
     res.send('ok ' + Array.from(clients).length)
@@ -38,8 +45,12 @@ app.get('/add', (req,res) => {
     res.sendFile(path.join(__dirname, '/view/admin/addNewUrl.html'))
 })
 
+app.get('/js/app.js', (req,res) => {
+    res.sendFile(path.join(__dirname, '/js/app.js'))
+})
+
 app.post('/add', (req,res) => {
     res.json({requestBody: req.body})
 })
-httpServer.listen(3004);
-http.createServer(app).listen(3005);
+httpServer.listen(3001);
+http.createServer(app).listen(3000);
