@@ -1,18 +1,31 @@
-let template = content => `<div class="dynamic-content">${content}</div>`
-const socket = io.connect('http://168.119.96.183:3001');
+
+let template = content => `<div class="dynamic-content">${content}</div>`;
+const socket = io.connect(`http://${IP}:3001`);
 const myStorage = window.localStorage;
+
+let urls = localStorage.getItem('urls');
+if(!urls) urls = new Set();
+else urls = new Set(Array.from(JSON.parse(urls)));
+
+urls.forEach(url => {
+    $('#result').append(template(url));
+})
 
 socket.on('start', o => {
     console.log(o);
-    let urls = localStorage.getItem('urls');
-    if(!urls) urls = new Set();
-    else urls = new Set(Array.from(JSON.parse(urls)));
     urls.add(o.url);
     urls = JSON.stringify(Array.from(urls));
     localStorage.setItem('urls', urls);
     $('#result').append(template(o.url));
     socket.emit('lalala', {res: 'ok'});
 });
+
+socket.on('clearAll', o => {
+    urls = new Set();
+    urls = JSON.stringify(Array.from(urls));
+    localStorage.setItem('urls', urls);
+})
+
 socket.on("connect", () => {
     const engine = socket.io.engine;
     console.log(engine.transport.name); // in most cases, prints "polling"
@@ -42,4 +55,3 @@ socket.on("connect", () => {
         // called when the underlying connection is closed
     });
 });
-console.log(socket)

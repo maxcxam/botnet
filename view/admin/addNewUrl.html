@@ -9,11 +9,21 @@
     <script src="https://cdn.socket.io/4.4.1/socket.io.min.js" integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H" crossorigin="anonymous"></script>
 </head>
 <body>
-    <form method="post" class="form">
-        <div class="input-group">
-            <label>URL:</label>
-            <input type="text" name="url" class="form-control">
-        </div>
-    </form>
+    <div class="input-group">
+        <label>URL:</label>
+        <input type="text" name="url" class="form-control" id="url">
+        <button class="btn btn-success" id="addUrl">send</button>
+    </div>
+    <script>
+        $('#addUrl').on('click', e => {
+            let url = $('#url').val();
+            $.ajax({
+                url: '/add',
+                method: 'POST',
+                data: {url: url},
+                done: console.log
+            }).fail(console.log)
+        })
+    </script>
 </body>
 </html>

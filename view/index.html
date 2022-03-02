@@ -15,6 +15,14 @@
 
         </div>
     </div>
+    <script>
+        const IP = "<%= uri %>"
+        $(document).ready(e => {
+           $.get('/api/host/' + window.location.host, data => {
+               console.log(data);
+           })
+        });
+    </script>
 <script src="/js/app.js"></script>
 </body>
 </html>
