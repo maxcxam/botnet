@@ -3,11 +3,9 @@ module.exports = {
       {
         name: "botnet",
         script: "./server.js",
-        instances: 1,
         watch: true,
         env: {
-            "IP": "168.119.96.183",
-            "NODE_ENV": "development"
+            "IP": "127.0.0.1",
         }
       }
   ]

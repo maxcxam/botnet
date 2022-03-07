@@ -21,11 +21,11 @@ const uri =
 mongoose.connect(uri);
 
 const uriSchema = new Schema({
-    uri:  String, // String is shorthand for {type: String}
+    uri:  String,
     title: String
 });
+
 const uriObj = mongoose.model('Uri', uriSchema)
-let uris = uriObj.find({}).then(console.log);
 
 const io = new Server(httpServer, {
     cors: {
@@ -34,14 +34,12 @@ const io = new Server(httpServer, {
     }
 });
 
-io.on('lalala', console.log);
 
 app.get('/', (req, res) => {
     io.on('connect', socket => {
         socket.join(room);
         console.log('connected');
         uriObj.find({}).then(e => {
-            console.log(e);
             for(el of e) io.emit('start', { 'url': el.uri})
         })
     })
@@ -49,14 +47,10 @@ app.get('/', (req, res) => {
     res.render(path.join(__dirname, '/view/index.html'), {uri: process.env.IP})
 })
 
-app.get('/api/host/:host', (req, res) => {
-
-})
 
 app.get('/admin', (req, res) => {
     io.to(room).emit('start', {'url': 'https://google1.com'});
     const clients = io.sockets.adapter.rooms.get(room);
-    console.log(Array.from(clients).length)
     res.send('ok ' + Array.from(clients).length)
 })
 
