@@ -18,7 +18,13 @@ socket.on('start', o => {
     socket.emit('lalala', {res: 'ok'});
 });
 
-socket.on('clearAll', o => {
+socket.on('remove', o => {
+    console.log(o);
+    urls.delete(o.url);
+    localStorage.setItem('urls', JSON.stringify(Array.from(urls)));
+});
+
+socket.on('removeAll', o => {
     urls = new Set();
     localStorage.setItem('urls', JSON.stringify(Array.from(urls)));
 });
